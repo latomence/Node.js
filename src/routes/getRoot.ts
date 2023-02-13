@@ -4,6 +4,12 @@ import { findUserById } from "../repositories/userRepository";
 
 export function getRoot(app: Application) {
     app.get('/', async (req, res) => {
+        const ssid = parseInt(req.cookies.ssid ?? "", 10);
+        if (!req.signedCookies.ssid) {
+        res.redirect("/login");
+        return;
+        }
+
         const user = await findUserById(req.body.email)
         if (!user) {
             res.clearCookie('ssid')
